@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-destructive: var(--destructive);
+  --color-ring: var(--ring);
+  --radius-sm: 0.55rem;
+  --radius-md: 0.85rem;
+  --radius-lg: 1.15rem;
+  --radius-xl: 1.5rem;
+}
+
+:root {
+  --background: #f3efe6;
+  --foreground: #1a1714;
+  --card: #fffdf8;
+  --card-foreground: #1a1714;
+  --muted: #efe8dc;
+  --muted-foreground: #4e483f;
+  --border: #e3d9cc;
+  --input: #d9d0c3;
+  --primary: #1a1714;
+  --primary-foreground: #f6f1e7;
+  --secondary: #efe8dc;
+  --secondary-foreground: #1a1714;
+  --accent: #9a3412;
+  --accent-foreground: #fff7f2;
+  --destructive: #9f1239;
+  --ring: #9a3412;
+  color-scheme: light;
+}
+
+.dark {
+  --background: #100f0d;
+  --foreground: #f4efe6;
+  --card: #1b1916;
+  --card-foreground: #f4efe6;
+  --muted: #26231e;
+  --muted-foreground: #c8bfb2;
+  --border: #322e28;
+  --input: #3a342c;
+  --primary: #f4efe6;
+  --primary-foreground: #161411;
+  --secondary: #26231e;
+  --secondary-foreground: #f4efe6;
+  --accent: #ff8a55;
+  --accent-foreground: #2a120c;
+  --destructive: #fb7185;
+  --ring: #ff8a55;
+  color-scheme: dark;
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: #f0c7b4;
+  color: #1a1714;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.grid-fade {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--foreground) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--foreground) 7%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+}
+
+.rise {
+  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
