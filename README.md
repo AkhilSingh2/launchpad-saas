@@ -2,6 +2,8 @@
 
 ![LaunchPad landing page](docs/screenshots/landing-desktop.png)
 
+**[Live demo](https://akhil-launchpad.vercel.app)** · one click signs you in as the Northstar owner. Sample data, simulated checkout, reset daily.
+
 LaunchPad is a portfolio-grade SaaS starter for planning a product launch with a team. It is built by [Akhilendra Singh](https://github.com/AkhilSingh2) to show the pieces a production multi-tenant app actually has: sessions, organisations, roles enforced on the server, Stripe subscriptions with idempotent webhooks, an audit log, rate limits, and transactional email.
 
 It runs locally with **no paid accounts**. Demo users are seeded. Stripe and Resend are real when you add keys, and stubbed when you do not.
@@ -95,6 +97,16 @@ The app is ready for Vercel plus any hosted Postgres (Neon, Supabase, or RDS).
 7. Add GitHub or Google OAuth credentials if you want those buttons enabled.
 
 No secrets belong in git. `.env.example` only contains local placeholders.
+
+### Hosted demo
+
+The [live demo](https://akhil-launchpad.vercel.app) runs on Vercel with a Neon Postgres database and `DEMO_MODE=true`. That flag is the only difference from a normal deploy:
+
+- `/demo` signs a visitor in as a seeded account (`?as=maya` or `?as=jordan` for the other roles).
+- A banner says the data is sample data and checkout is simulated. No Stripe keys are set, so billing uses the in-app stub.
+- Deleting Northstar, removing members, changing roles, and editing the seeded profiles are refused, so the next visitor sees the same workspace.
+- A daily Vercel cron calls `/api/demo/reset` with `CRON_SECRET` and reseeds the database.
+- The build command is `pnpm db:migrate && pnpm db:seed && pnpm build`, which is only right for a demo database.
 
 ## What this demonstrates
 
