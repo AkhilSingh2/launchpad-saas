@@ -13,7 +13,7 @@ import { canRemoveMember, isRole, PermissionError } from "@/lib/rbac";
 import { rateLimit } from "@/lib/rate-limit";
 import { getUsage, ORG_COOKIE } from "@/lib/tenant";
 import { firstIssue, inviteInput } from "@/lib/validators";
-import { errorRedirect, noticeRedirect, requirePermission, requireSession } from "@/server/context";
+import { errorRedirect, guardDemoOrg, noticeRedirect, requirePermission, requireSession } from "@/server/context";
 
 function orgCookie(organizationId: string) {
   return {
@@ -138,6 +138,7 @@ export async function revokeInvite(formData: FormData) {
 export async function changeRole(formData: FormData) {
   try {
     const { org, user: actor } = await requirePermission("member:role");
+    guardDemoOrg(org.slug, "/app/team");
     const memberId = String(formData.get("memberId") ?? "");
     const nextRole = String(formData.get("role") ?? "");
     if (!isRole(nextRole)) errorRedirect("/app/team", "Unknown role.");
@@ -178,6 +179,7 @@ export async function changeRole(formData: FormData) {
 export async function removeMember(formData: FormData) {
   try {
     const { org, user: actor, role } = await requirePermission("member:remove");
+    guardDemoOrg(org.slug, "/app/team");
     const memberId = String(formData.get("memberId") ?? "");
     const [target] = await db
       .select()

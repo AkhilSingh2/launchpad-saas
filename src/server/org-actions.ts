@@ -11,7 +11,15 @@ import { PermissionError } from "@/lib/rbac";
 import { slugify } from "@/lib/slug";
 import { ORG_COOKIE } from "@/lib/tenant";
 import { firstIssue, orgNameInput, profileInput } from "@/lib/validators";
-import { errorRedirect, noticeRedirect, requirePermission, requireSession, requireWorkspace } from "@/server/context";
+import {
+  errorRedirect,
+  guardDemoOrg,
+  guardDemoUser,
+  noticeRedirect,
+  requirePermission,
+  requireSession,
+  requireWorkspace,
+} from "@/server/context";
 
 function cookieOptions() {
   return {
@@ -70,6 +78,7 @@ export async function createOrganization(formData: FormData) {
 export async function updateOrganization(formData: FormData) {
   try {
     const { org, user } = await requirePermission("org:update");
+    guardDemoOrg(org.slug, "/app/settings");
     const parsed = orgNameInput.safeParse({ name: formData.get("name") });
     if (!parsed.success) errorRedirect("/app/settings", firstIssue(parsed.error));
     await db
@@ -93,6 +102,7 @@ export async function updateOrganization(formData: FormData) {
 
 export async function updateProfile(formData: FormData) {
   const session = await requireSession();
+  guardDemoUser(session.user.email, "/app/settings");
   const parsed = profileInput.safeParse({ name: formData.get("name") });
   if (!parsed.success) errorRedirect("/app/settings", firstIssue(parsed.error));
   await auth.api.updateUser({
@@ -104,6 +114,7 @@ export async function updateProfile(formData: FormData) {
 
 export async function leaveOrganization() {
   const { org, user, role } = await requireWorkspace();
+  guardDemoOrg(org.slug, "/app/settings");
   if (role === "owner") {
     errorRedirect("/app/settings", "Transfer ownership before leaving.");
   }
@@ -125,6 +136,7 @@ export async function leaveOrganization() {
 export async function deleteOrganization(formData: FormData) {
   try {
     const { org } = await requirePermission("org:delete");
+    guardDemoOrg(org.slug, "/app/settings");
     const confirm = String(formData.get("confirm") ?? "");
     if (confirm !== org.slug) errorRedirect("/app/settings", "Type the organisation slug to delete it.");
     await db.delete(organizations).where(eq(organizations.id, org.organizationId));

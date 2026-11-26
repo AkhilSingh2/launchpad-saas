@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Fraunces, Outfit } from "next/font/google";
+import { DemoBanner } from "@/components/demo-banner";
 import { ThemeProvider } from "@/components/theme-provider";
+import { demoMode } from "@/lib/demo";
 import "./globals.css";
 
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
@@ -23,7 +25,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {demoMode() ? <DemoBanner /> : null}
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

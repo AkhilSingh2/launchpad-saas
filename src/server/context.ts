@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { launches } from "@/db/schema";
 import { auth } from "@/lib/auth";
+import { DEMO_ORG_SLUG, DEMO_USERS, demoMode } from "@/lib/demo";
 import { orgPlan, roleOf, getOrgContext } from "@/lib/tenant";
 import { assertCan, type Action } from "@/lib/rbac";
 
@@ -45,4 +46,16 @@ export function errorRedirect(path: string, error: string): never {
 export function noticeRedirect(path: string, notice: string): never {
   const params = new URLSearchParams({ notice: notice.slice(0, 200) });
   redirect(`${path}?${params.toString()}`);
+}
+
+const DEMO_LOCKED = "This part of the shared demo is locked so the next visitor sees the same workspace.";
+
+/** On the hosted demo, keeps visitors from removing people from, or deleting, the shared workspace. */
+export function guardDemoOrg(slug: string, path: string) {
+  if (demoMode() && slug === DEMO_ORG_SLUG) errorRedirect(path, DEMO_LOCKED);
+}
+
+/** On the hosted demo, keeps the seeded accounts' profiles intact. */
+export function guardDemoUser(email: string, path: string) {
+  if (demoMode() && DEMO_USERS.some((person) => person.email === email)) errorRedirect(path, DEMO_LOCKED);
 }

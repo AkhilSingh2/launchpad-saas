@@ -20,3 +20,16 @@ export const DEMO_USERS = [
     note: "Northstar",
   },
 ] as const;
+
+export const DEMO_ORG_SLUG = "northstar";
+
+/** True only on the hosted demo, where visitors share one seeded workspace. */
+export function demoMode() {
+  return process.env.DEMO_MODE === "true";
+}
+
+export const DEMO_SIGN_IN = {
+  akhil: "akhil@launchpad.dev",
+  maya: "maya@launchpad.dev",
+  jordan: "jordan@launchpad.dev",
+} as const;

@@ -3,6 +3,7 @@ import { HeroMotion } from "@/components/marketing/hero-motion";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { Button } from "@/components/ui/button";
+import { demoMode } from "@/lib/demo";
 
 const pillars = [
   {
@@ -26,6 +27,7 @@ const steps = [
 ];
 
 export default function HomePage() {
+  const demoHref = demoMode() ? "/demo" : "/login";
   return (
     <div className="relative min-h-screen">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[42rem] bg-[radial-gradient(ellipse_at_top,rgba(194,65,12,0.16),transparent_58%)]" />
@@ -49,10 +51,14 @@ export default function HomePage() {
                   <Link href="/signup">Start a free pad</Link>
                 </Button>
                 <Button asChild size="lg" variant="outline">
-                  <Link href="/login">Open the demo</Link>
+                  <Link href={demoHref}>{demoMode() ? "Try the demo" : "Open the demo"}</Link>
                 </Button>
               </div>
-              <p className="mt-4 text-sm text-muted-foreground">Seeded accounts. No Stripe or Resend key required.</p>
+              <p className="mt-4 text-sm text-muted-foreground">
+                {demoMode()
+                  ? "One click signs you in as the Northstar owner. No account needed."
+                  : "Seeded accounts. No Stripe or Resend key required."}
+              </p>
             </HeroMotion>
           </div>
           <HeroMotion delay={0.12}>
@@ -125,7 +131,7 @@ export default function HomePage() {
               </p>
             </div>
             <Button asChild size="lg" variant="secondary">
-              <Link href="/login">Enter the demo</Link>
+              <Link href={demoHref}>Enter the demo</Link>
             </Button>
           </div>
         </section>

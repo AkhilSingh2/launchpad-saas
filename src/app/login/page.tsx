@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { AuthForm } from "@/components/auth-form";
 import { Logo } from "@/components/logo";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { oauthProviders } from "@/lib/auth";
+import { demoMode } from "@/lib/demo";
 import { safeNextPath } from "@/lib/slug";
 
 export const metadata: Metadata = { title: "Sign in" };
@@ -28,6 +31,14 @@ export default async function LoginPage({
         <div className="mx-auto w-full max-w-md">
           <h1 className="font-display text-4xl lg:hidden">Sign in</h1>
           <h2 className="hidden font-display text-4xl lg:block">Sign in</h2>
+          {demoMode() ? (
+            <div className="mt-6">
+              <Button asChild size="lg" className="w-full">
+                <Link href="/demo">Try the demo in one click</Link>
+              </Button>
+              <p className="mt-2 text-center text-xs text-muted-foreground">Signs you in as Akhil, owner of Northstar.</p>
+            </div>
+          ) : null}
           <div className="mt-8">
             <AuthForm
               mode="login"
